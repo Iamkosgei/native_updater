@@ -1,4 +1,3 @@
-import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -59,11 +58,14 @@ class NativeUpdater {
     _nativeUpdaterInstance._iOSCloseButtonLabel = iOSCloseButtonLabel;
     _nativeUpdaterInstance._iOSIgnoreButtonLabel = iOSIgnoreButtonLabel;
     _nativeUpdaterInstance._iOSAlertTitle = iOSAlertTitle;
-    _nativeUpdaterInstance._requireUpdateText = requireUpdateText ?? 'requires that you update to the latest version. You cannot use this app until it is updated.';
-    _nativeUpdaterInstance._recommendUpdateText = recommendUpdateText ?? 'recommends that you update to the latest version. You can keep using this app while downloading the update.';
+    _nativeUpdaterInstance._requireUpdateText = requireUpdateText ??
+        'requires that you update to the latest version. You cannot use this app until it is updated.';
+    _nativeUpdaterInstance._recommendUpdateText = recommendUpdateText ??
+        'recommends that you update to the latest version. You can keep using this app while downloading the update.';
     _nativeUpdaterInstance._errorText = errorText;
     _nativeUpdaterInstance._errorCloseButtonLabel = errorCloseButtonLabel;
     _nativeUpdaterInstance._errorSubtitle = errorSubtitle;
+
     /// Show the alert based on current platform
     if (Platform.isIOS) {
       _nativeUpdaterInstance._showCupertinoAlertDialog();
@@ -77,11 +79,9 @@ class NativeUpdater {
     String selectedDefaultDescription;
 
     if (_forceUpdate) {
-      selectedDefaultDescription =
-          '$_appName $_requireUpdateText';
+      selectedDefaultDescription = '$_appName $_requireUpdateText';
     } else {
-      selectedDefaultDescription =
-          '$_appName $_recommendUpdateText';
+      selectedDefaultDescription = '$_appName $_recommendUpdateText';
     }
 
     Widget alert = UpdateCupertinoAlert(
@@ -109,26 +109,28 @@ class NativeUpdater {
     try {
       AppUpdateInfo _updateInfo = await InAppUpdate.checkForUpdate();
 
-      if (_updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+      if (_updateInfo.updateAvailability ==
+          UpdateAvailability.updateAvailable) {
         if (_forceUpdate == true) {
           InAppUpdate.performImmediateUpdate()
-              .catchError((e) => developer.log(e.toString()));
+              .catchError((e) => print(e.toString()));
         } else if (_forceUpdate == false) {
           InAppUpdate.startFlexibleUpdate()
-              .catchError((e) => developer.log(e.toString()));
+              .catchError((e) => print(e.toString()));
         }
       }
     } on PlatformException catch (e) {
-      developer.log(e.code.toString());
+      print(e.code.toString());
+      print(e.code.toString());
 
       showDialog(
         context: _context,
         builder: (BuildContext context) {
           return ErrorMaterialAlert(
             appName: _appName,
-            description:
-                _errorText ?? 'This version of $_appName was not installed from Google Play Store.',
-            errorCloseButtonLabel:_errorCloseButtonLabel,
+            description: _errorText ??
+                'This version of $_appName was not installed from Google Play Store.',
+            errorCloseButtonLabel: _errorCloseButtonLabel,
             errorSubtitle: _errorSubtitle,
           );
         },
